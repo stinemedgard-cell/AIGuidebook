@@ -37,7 +37,7 @@ const translations = {
       contact: 'Kontakt oss',
     },
     footer: {
-      copyright: '© 2026 KI i Akademia. Alle rettigheter reservert.',
+      copyright: '© 2026 AIGuidebook. Alle rettigheter reservert.',
       privacy: 'Personvern',
       terms: 'Vilkår',
       about: 'Om oss',
@@ -65,7 +65,7 @@ const translations = {
       contact: 'Contact Us',
     },
     footer: {
-      copyright: '© 2026 AI in Academia. All rights reserved.',
+      copyright: '© 2026 AIGuidebook. All rights reserved.',
       privacy: 'Privacy',
       terms: 'Terms',
       about: 'About Us',
@@ -216,7 +216,7 @@ const ContactModal: React.FC<{ open: boolean; onClose: () => void }> = ({ open, 
 };
 
 /* ─── Header ─── */
-const Header: React.FC<{ onOpenContact: () => void }> = ({ onOpenContact }) => {
+const Header: React.FC = () => {
   const { lang, setLang, t } = useLanguage();
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
@@ -247,8 +247,14 @@ const Header: React.FC<{ onOpenContact: () => void }> = ({ onOpenContact }) => {
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <img src="/assets/logo.png" alt="KI i Akademia" className="h-9 w-auto" />
+        <Link to="/" className="flex items-center">
+          <div className="overflow-hidden" style={{ height: '44px' }}>
+            <img
+              src="/assets/logo.png"
+              alt="KI i Akademia"
+              style={{ height: '100px', marginTop: '-28px', width: 'auto' }}
+            />
+          </div>
         </Link>
 
         {/* Desktop Nav */}
@@ -283,13 +289,6 @@ const Header: React.FC<{ onOpenContact: () => void }> = ({ onOpenContact }) => {
             <Globe className="h-4 w-4" />
             {lang === 'no' ? 'NO' : 'EN'}
           </button>
-          <Button
-            onClick={onOpenContact}
-            size="sm"
-            className="hidden bg-blue-600 text-white hover:bg-blue-700 sm:inline-flex"
-          >
-            {t.nav.contact}
-          </Button>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 md:hidden"
@@ -331,15 +330,6 @@ const Header: React.FC<{ onOpenContact: () => void }> = ({ onOpenContact }) => {
                   </Link>
                 )
               )}
-              <Button
-                onClick={() => {
-                  setMobileOpen(false);
-                  onOpenContact();
-                }}
-                className="mt-2 w-full bg-blue-600 text-white hover:bg-blue-700"
-              >
-                {t.nav.contact}
-              </Button>
             </div>
           </motion.div>
         )}
@@ -349,7 +339,7 @@ const Header: React.FC<{ onOpenContact: () => void }> = ({ onOpenContact }) => {
 };
 
 /* ─── Footer ─── */
-const Footer: React.FC = () => {
+const Footer: React.FC<{ onOpenContact: () => void }> = ({ onOpenContact }) => {
   const { t } = useLanguage();
   return (
     <footer className="border-t border-slate-200 bg-slate-900 text-slate-300">
@@ -357,8 +347,16 @@ const Footer: React.FC = () => {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {/* Col 1: Logo & copyright */}
           <div>
-            <div className="mb-4 flex items-center gap-2">
-              <img src="/assets/logo.png" alt="KI i Akademia" className="h-8 w-auto brightness-0 invert" />
+            <div className="mb-4">
+              <div className="inline-block rounded-xl bg-white px-3 py-2">
+                <div className="overflow-hidden" style={{ height: '36px' }}>
+                  <img
+                    src="/assets/logo.png"
+                    alt="KI i Akademia"
+                    style={{ height: '82px', marginTop: '-23px', width: 'auto' }}
+                  />
+                </div>
+              </div>
             </div>
             <p className="text-sm text-slate-400">{t.footer.copyright}</p>
           </div>
@@ -394,9 +392,9 @@ const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/juridisk/om-oss" className="transition-colors hover:text-white">
+                <button onClick={onOpenContact} className="transition-colors hover:text-white">
                   {t.footer.contactUs}
-                </Link>
+                </button>
               </li>
             </ul>
           </div>
@@ -411,9 +409,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [contactOpen, setContactOpen] = useState(false);
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
-      <Header onOpenContact={() => setContactOpen(true)} />
+      <Header />
       <main className="flex-1">{children}</main>
-      <Footer />
+      <Footer onOpenContact={() => setContactOpen(true)} />
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </div>
   );

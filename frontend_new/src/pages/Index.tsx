@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   MessageSquare,
   Send,
@@ -13,20 +13,24 @@ import {
   ArrowRight,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   Calendar,
   Bot,
   User,
+  FileText,
+  GraduationCap,
+  AlertCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Layout from '@/components/Layout';
 import { useLanguage } from '@/components/Layout';
+import { newsArticles } from '@/lib/newsData';
 
-const HERO_IMG = 'https://mgx-backend-cdn.metadl.com/generate/images/1093238/2026-04-20/m7yac5iaafhq/hero-academic-ai.png';
 const ETHICS_IMG = 'https://mgx-backend-cdn.metadl.com/generate/images/1093238/2026-04-20/m7x77yiaafiq/ethics-academic.png';
 const SECURITY_IMG = 'https://mgx-backend-cdn.metadl.com/generate/images/1093238/2026-04-20/m7yagvyaafgq/security-data.png';
 const RELIABILITY_IMG = 'https://mgx-backend-cdn.metadl.com/generate/images/1093238/2026-04-20/m7x775qaafha/reliability-ai.png';
-const NEWS_IMG = 'https://mgx-backend-cdn.metadl.com/generate/images/1093238/2026-04-20/m7yaehiaafga/news-ai-research.png';
 
 /* ─── Data ─── */
 const chatResponses: Record<string, { no: string; en: string }> = {
@@ -45,32 +49,9 @@ const chatResponses: Record<string, { no: string; en: string }> = {
 };
 
 const exampleQuestions = [
-  'Hvordan sitere ChatGPT?',
-  'Er det lov å bruke KI på eksamen?',
-  'Hva er KI-hallusinasjoner?',
-];
-
-const newsArticles = [
-  {
-    title: { no: 'Nye retningslinjer for KI i høyere utdanning', en: 'New Guidelines for AI in Higher Education' },
-    date: '15. april 2026',
-    img: NEWS_IMG,
-  },
-  {
-    title: { no: 'Slik bruker studenter KI ansvarlig', en: 'How Students Use AI Responsibly' },
-    date: '10. april 2026',
-    img: ETHICS_IMG,
-  },
-  {
-    title: { no: 'Personvern og KI: Hva du bør vite', en: 'Privacy and AI: What You Should Know' },
-    date: '5. april 2026',
-    img: SECURITY_IMG,
-  },
-  {
-    title: { no: 'KI-verktøy i akademisk forskning 2026', en: 'AI Tools in Academic Research 2026' },
-    date: '1. april 2026',
-    img: RELIABILITY_IMG,
-  },
+  { q: 'Hvordan sitere ChatGPT?', icon: FileText },
+  { q: 'Er det lov å bruke KI på eksamen?', icon: GraduationCap },
+  { q: 'Hva er KI-hallusinasjoner?', icon: AlertCircle },
 ];
 
 const faqItems = [
@@ -148,7 +129,7 @@ const ChatSimulator: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto w-full max-w-2xl">
+    <div className="mx-auto w-full max-w-4xl">
       <div className="rounded-2xl border border-slate-200 bg-white shadow-lg overflow-hidden">
         {/* Chat header */}
         <div className="flex items-center gap-2 border-b border-slate-100 bg-slate-50 px-5 py-3">
@@ -162,12 +143,24 @@ const ChatSimulator: React.FC = () => {
         </div>
 
         {/* Messages */}
-        <div className="h-64 overflow-y-auto p-4 space-y-3">
+        <div className="h-80 overflow-y-auto p-4 space-y-3">
           {messages.length === 0 && (
-            <div className="flex h-full items-center justify-center text-sm text-slate-400">
-              {lang === 'no'
-                ? 'Still et spørsmål om KI i akademia...'
-                : 'Ask a question about AI in academia...'}
+            <div className="flex h-full flex-col items-center justify-center gap-3 py-2">
+              <p className="text-xs text-slate-400">
+                {lang === 'no' ? 'Prøv et eksempelspørsmål:' : 'Try an example question:'}
+              </p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {exampleQuestions.map(({ q, icon: Icon }) => (
+                  <button
+                    key={q}
+                    onClick={() => handleSend(q)}
+                    className="flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-5 py-4 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100 hover:border-blue-300"
+                  >
+                    <Icon className="h-4 w-4 shrink-0" />
+                    {q}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
           {messages.map((msg, i) => (
@@ -222,26 +215,13 @@ const ChatSimulator: React.FC = () => {
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={lang === 'no' ? 'Skriv et spørsmål...' : 'Type a question...'}
+              placeholder={lang === 'no' ? 'Still et spørsmål om KI i akademia...' : 'Ask a question about AI in academia...'}
               className="flex-1"
             />
             <Button type="submit" size="icon" className="bg-blue-600 text-white hover:bg-blue-700" disabled={typing}>
               <Send className="h-4 w-4" />
             </Button>
           </form>
-
-          {/* Example questions */}
-          <div className="mt-2 flex flex-wrap gap-2">
-            {exampleQuestions.map((q) => (
-              <button
-                key={q}
-                onClick={() => handleSend(q)}
-                className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600 transition-colors hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700"
-              >
-                {q}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
     </div>
@@ -289,13 +269,16 @@ const FAQItem: React.FC<{ q: string; a: string; index: number }> = ({ q, a, inde
   );
 };
 
-/* Need AnimatePresence import at top - already imported via framer-motion */
-import { AnimatePresence } from 'framer-motion';
-
 /* ─── Page ─── */
 const Index: React.FC = () => {
   const { lang } = useLanguage();
   const isNo = lang === 'no';
+  const [newsStart, setNewsStart] = useState(0);
+
+  const perPage = 3;
+  const canPrev = newsStart > 0;
+  const canNext = newsStart + perPage < newsArticles.length;
+  const visibleArticles = newsArticles.slice(newsStart, newsStart + perPage);
 
   const guidelineCards = [
     {
@@ -357,11 +340,7 @@ const Index: React.FC = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-20 sm:py-28">
-        <div
-          className="absolute inset-0 opacity-20 bg-cover bg-center"
-          style={{ backgroundImage: `url(${HERO_IMG})` }}
-        />
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-100 via-white to-blue-50 py-20 sm:py-28">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -369,10 +348,10 @@ const Index: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="mb-10 text-center"
           >
-            <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+            <h1 className="mb-4 text-3xl font-bold text-slate-800 sm:text-4xl lg:text-5xl">
               {isNo ? 'Kunstig intelligens i akademia' : 'Artificial Intelligence in Academia'}
             </h1>
-            <p className="mx-auto max-w-2xl text-base text-slate-300 sm:text-lg">
+            <p className="mx-auto max-w-2xl text-base text-slate-600 sm:text-lg">
               {isNo
                 ? 'Din komplette guide til ansvarlig bruk av KI-verktøy i studiene. Lær om retningslinjer, verktøy og beste praksis.'
                 : 'Your complete guide to responsible use of AI tools in studies. Learn about guidelines, tools, and best practices.'}
@@ -500,40 +479,61 @@ const Index: React.FC = () => {
             </p>
           </motion.div>
 
-          <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
-            {newsArticles.map((article, i) => (
-              <motion.div
-                key={i}
-                custom={i}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="min-w-[280px] max-w-[320px] snap-start flex-shrink-0"
-              >
-                <div className="group rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
-                  <div className="aspect-video overflow-hidden">
-                    <img
-                      src={article.img}
-                      alt={article.title[lang]}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="p-5">
-                    <div className="mb-2 flex items-center gap-1 text-xs text-slate-400">
-                      <Calendar className="h-3 w-3" />
-                      {article.date}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setNewsStart((s) => Math.max(0, s - 1))}
+              disabled={!canPrev}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-30"
+              aria-label={isNo ? 'Forrige' : 'Previous'}
+            >
+              <ChevronLeft className="h-5 w-5 text-slate-600" />
+            </button>
+
+            <div className="flex-1 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {visibleArticles.map((article, i) => (
+                <motion.div
+                  key={article.slug}
+                  custom={i}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                >
+                  <Link to={`/nyheter/${article.slug}`} className="block">
+                    <div className="group rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
+                      <div className="aspect-video overflow-hidden">
+                        <img
+                          src={article.img}
+                          alt={article.title[lang]}
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      </div>
+                      <div className="p-5">
+                        <div className="mb-2 flex items-center gap-1 text-xs text-slate-400">
+                          <Calendar className="h-3 w-3" />
+                          {article.date}
+                        </div>
+                        <h3 className="mb-3 text-sm font-bold text-slate-800 leading-snug">
+                          {article.title[lang]}
+                        </h3>
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600">
+                          {isNo ? 'Les mer' : 'Read more'} <ArrowRight className="h-3 w-3" />
+                        </span>
+                      </div>
                     </div>
-                    <h3 className="mb-3 text-sm font-bold text-slate-800 leading-snug">
-                      {article.title[lang]}
-                    </h3>
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600">
-                      {isNo ? 'Les mer' : 'Read more'} <ArrowRight className="h-3 w-3" />
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setNewsStart((s) => Math.min(newsArticles.length - perPage, s + 1))}
+              disabled={!canNext}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-30"
+              aria-label={isNo ? 'Neste' : 'Next'}
+            >
+              <ChevronRight className="h-5 w-5 text-slate-600" />
+            </button>
           </div>
         </div>
       </section>

@@ -11,6 +11,7 @@ import Checklist from './pages/Checklist';
 import Legal from './pages/Legal';
 import AuthCallback from './pages/AuthCallback';
 import AuthError from './pages/AuthError';
+import NewsArticlePage from './pages/NewsArticlePage';
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const AppRoutes = () => (
     <Route path="/kildehenviser" element={<References />} />
     <Route path="/sjekkliste" element={<Checklist />} />
     <Route path="/juridisk/:type" element={<Legal />} />
+    <Route path="/nyheter/:slug" element={<NewsArticlePage />} />
     <Route path="/auth/callback" element={<AuthCallback />} />
     <Route path="/auth/error" element={<AuthError />} />
   </Routes>
