@@ -292,6 +292,7 @@ const Header: React.FC = () => {
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 md:hidden"
+            aria-label={mobileOpen ? 'Lukk meny' : 'Åpne meny'}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -363,9 +364,9 @@ const Footer: React.FC<{ onOpenContact: () => void }> = ({ onOpenContact }) => {
 
           {/* Col 2: Legal */}
           <div>
-            <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400">
               {t.footer.legal}
-            </h4>
+            </p>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link to="/juridisk/personvern" className="transition-colors hover:text-white">
@@ -382,9 +383,9 @@ const Footer: React.FC<{ onOpenContact: () => void }> = ({ onOpenContact }) => {
 
           {/* Col 3: About */}
           <div>
-            <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400">
               {t.footer.aboutSite}
-            </h4>
+            </p>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link to="/juridisk/om-oss" className="transition-colors hover:text-white">

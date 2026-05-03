@@ -137,7 +137,7 @@ const ChatSimulator: React.FC = () => {
           <span className="text-sm font-semibold text-slate-700">
             {lang === 'no' ? 'KI-Assistent' : 'AI Assistant'}
           </span>
-          <span className="ml-auto text-xs text-slate-400">
+          <span className="ml-auto text-xs text-slate-600">
             {lang === 'no' ? 'Simulert RAG-system' : 'Simulated RAG system'}
           </span>
         </div>
@@ -146,7 +146,7 @@ const ChatSimulator: React.FC = () => {
         <div className="h-80 overflow-y-auto p-4 space-y-3">
           {messages.length === 0 && (
             <div className="flex h-full flex-col items-center justify-center gap-3 py-2">
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-600">
                 {lang === 'no' ? 'Prøv et eksempelspørsmål:' : 'Try an example question:'}
               </p>
               <div className="flex flex-wrap justify-center gap-2">
@@ -218,7 +218,7 @@ const ChatSimulator: React.FC = () => {
               placeholder={lang === 'no' ? 'Still et spørsmål om KI i akademia...' : 'Ask a question about AI in academia...'}
               className="flex-1"
             />
-            <Button type="submit" size="icon" className="bg-blue-600 text-white hover:bg-blue-700" disabled={typing}>
+            <Button type="submit" size="icon" className="bg-blue-600 text-white hover:bg-blue-700" disabled={typing} aria-label={lang === 'no' ? 'Send melding' : 'Send message'}>
               <Send className="h-4 w-4" />
             </Button>
           </form>
@@ -506,6 +506,7 @@ const Index: React.FC = () => {
                           src={article.img}
                           alt={article.title[lang]}
                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          loading="lazy"
                         />
                       </div>
                       <div className="p-5">

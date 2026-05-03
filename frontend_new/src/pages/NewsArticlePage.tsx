@@ -35,6 +35,7 @@ const NewsArticlePage: React.FC = () => {
           src={article.img}
           alt={article.title[lang]}
           className="h-full w-full object-cover"
+          loading="lazy"
         />
       </div>
 
